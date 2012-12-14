@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+<!-- <script type="text/javascript" src="main.js"></script> -->
+<script src="http://code.jquery.com/jquery-1.6.1.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<!-- <script src="/main.js"></script> -->
+<script>
+
+ var socket = io.connect('http://localhost');
+
+ socket.on('connect', function () {
+  
+  $('#chat').addClass('connected');
+});
+
+
+  socket.on('announcement', function (msg) {
+  $('#lines').append($('<p>').append($('<em>').text(msg)));
+});
+  socket.on('#nicknames', function (nicknames) {
+  $('#nicknames').empty().append($('<span>Online: </span>'));
+  for (var i in nicknames) {
+    $('#nicknames').append($('<b>').text(nicknames[i]));
+  }
+});
+
+
+$(function()
+{
+ $('#set-nickname').submit(function() {
+ socket.emit('nickname', $('#nick').val(), function (set) {
+      if (!set) {
+       clear();
+       return $('#chat').addClass('nickname-set');
+      }
+    // $('#nickname-err').css('visibility', 'visible');
+    });
+  return false;
+});
+});
+
+
+function clear () {
+    $('#message').val('').focus();
+  };
+</script>
+</head>
+Hello World
+<body>
+    <div id="chat">
+    	<div id ="nickname">		
+  			<form id ="set-nickname">
+    			<p>Saisir un  login: </b>
+ 					<input type="text" id="nick" style="width:250px;" /> <input type="submit" value="Ok" />
+  			</form>
+    	</div>
+    	<div id="message">
+    		<div id="nicknames"> </div>
+        <div id="lines"></div>
+    	</div>
+    	<div id="connecting">
+    	</div>
+    </div>
+</body>
+</html>
+
+
+<!-- #chat
+      #nickname
+        form.wrap#set-nickname
+          p Please type in your nickname and press enter.
+          input#nick
+          p#nickname-err Nickname already in use
+      #connecting
+        .wrap Connecting to socket.io server
+      #messages
+        #nicknames
+        #lines
+      form#send-message
+        input#message
+        button Send -->
