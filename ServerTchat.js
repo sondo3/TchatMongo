@@ -77,7 +77,10 @@ io.sockets.on('connection', function (socket) {
 			} else {
 				console.log("Erreur"+nick);
 				fn(false);
-				
+				for( var i in nicknames){
+					socket.emit('announcement',nicknames[i] + 'connected');
+				}
+
 				nicknames[nick] = socket.nickname = nick;
 				socket.broadcast.emit('announcement', nick + ' connected');
 	      		io.sockets.emit('nicknames', nicknames);
